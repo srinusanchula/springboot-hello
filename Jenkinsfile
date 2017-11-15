@@ -38,9 +38,19 @@ pipeline {
         }
     
         stage ('Integration Test') {
-            steps {
-                echo 'Here goes the integration tests'
-                sh 'sleep 10s'
+            parallel {
+                stage ('DAP') {
+                    steps {
+                        echo 'Here goes the DAP tests'
+                        sh 'sleep 10s'
+                    }
+                }
+                stage ('JAF') {
+                    steps {
+                        echo 'Here goes the JAF tests'
+                        sh 'sleep 10s'
+                    }
+                }
             }
         }
     
@@ -48,6 +58,12 @@ pipeline {
             steps {
                 echo 'Here goes the scale tests'
                 sh 'sleep 10s'
+            }
+        }
+
+        stage ('Deploy approval') {
+            steps {
+                input 'Deploy to azure staging?'
             }
         }
 
