@@ -1,4 +1,4 @@
-node("linux && jdk8") {
+// node("linux && jdk8") {
     stage "Checkout"
     git url: "https://github.com/srinusanchula/springboot-hello.git"
     
@@ -29,7 +29,7 @@ node("linux && jdk8") {
     stage name: "Deploy to Azure Staging", concurrency: 1
     echo 'Here goes the deployment'
     sh 'sleep 10s'
-}
+//}
 
 def archiveUnitTestResults() {
     step([$class: "JUnitResultArchiver", testResults: "build/**/TEST-*.xml"])
