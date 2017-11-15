@@ -6,13 +6,14 @@ pipeline {
         stage ('Checkout') {
             steps {
                 // echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-                // echo 'Checkout source ...'
+                echo 'Checkout source'
                 checkout scm
             }
         }
     
         stage ('Build') {
             steps {
+                echo 'Build source'
                 sh './gradlew clean build -x test'
             }
         }
@@ -21,6 +22,7 @@ pipeline {
             parallel {
                 stage ('Unit Test') {
                     steps {
+                        echo 'Unit testing'
                         sh './gradlew test'
                         // archiveUnitTestResults()
                     }
