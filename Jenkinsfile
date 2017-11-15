@@ -5,8 +5,8 @@ pipeline {
 
         stage ('Checkout') {
             steps {
-                echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-                echo 'Checkout source ...'
+                // echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                // echo 'Checkout source ...'
                 checkout scm
             }
         }
