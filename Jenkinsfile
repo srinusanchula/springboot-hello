@@ -18,20 +18,20 @@ pipeline {
             }
         }
 
-        stage ('Code Coverage Test') {
+        stage ('Functional Test') {
             parallel {
-                stage ('Unit Test') {
-                    steps {
-                        echo 'Unit testing'
-                        sh './gradlew test'
-                        // archiveUnitTestResults()
-                    }
-                }
-                stage ('Sonarcube') {
+                stage ('Static Analysis') {
                     steps {
                         echo 'Sonarqube tests'
                         sh 'sleep 10s'
                         // archiveCodeCoverageResults()
+                    }
+                }
+                stage ('Unit/Mock Test') {
+                    steps {
+                        echo 'Unit/Mock testing'
+                        sh './gradlew test jacocoTestReport'
+                        // archiveUnitTestResults()
                     }
                 }
             }
