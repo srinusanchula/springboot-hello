@@ -1,14 +1,4 @@
-props = null
-
-def init() {
-    node {
-        checkout scm
-        properties = new Properties()
-        File propertiesFile = new File("${workspace}/uem-pipeline.properties")
-        props.load(propertiesFile.newDataInputStream())
-    }
-}
-
+def props = readProperties file: 'uem-pipeline.properties'
 
 pipeline {
     agent any
@@ -18,10 +8,8 @@ pipeline {
         stage ('Checkout') {
             steps {
                 echo "Checkout source"
-                script {
-                    init()
-                    echo "Init successful for project ${props.PROJECT}"
-                }
+                checkout scm
+                echo "Checkout successful for project ${props.PROJECT}"
             }
         }
     
