@@ -46,7 +46,7 @@ pipeline {
             }
         }
 
-        stage ('Containerization') {
+        stage ('Deploy Azure Approval') {
             steps {
                 println 'New build image hello:${env.BUILD_ID} is ready.'
                 println 'Please complete the DAP, JAF and Scale tests.'
