@@ -1,3 +1,15 @@
+props = null
+
+def init() {
+    node {
+        checkout scm
+        properties = new Properties()
+        File propertiesFile = new File("${workspace}/pipeline.properties")
+        props.load(propertiesFile.newDataInputStream())
+    }
+}
+
+
 pipeline {
     agent any
 
@@ -5,15 +17,17 @@ pipeline {
 
         stage ('Checkout') {
             steps {
-                echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
-                echo 'Checkout source'
-                checkout scm
+                echo "Checkout source"
+                script {
+                    init()
+                    echo "Init successful for project ${props.PROJECT}"
+                }
             }
         }
     
         stage ('Build') {
             steps {
-                echo 'Build source'
+                echo "Building source, Running build ${env.BUILD_ID}."
                 sh "./gradlew clean build -x test -PBUILD_ID=${env.BUILD_ID}"
             }
         }
@@ -22,14 +36,14 @@ pipeline {
             parallel {
                 stage ('Static Analysis') {
                     steps {
-                        echo 'Sonarqube tests'
+                        echo "Sonarqube tests"
                         sh 'sleep 10s'
                         // archiveCodeCoverageResults()
                     }
                 }
                 stage ('Unit/Mock Test') {
                     steps {
-                        echo 'Unit/Mock testing'
+                        echo "Unit/Mock testing"
                         sh "./gradlew test jacocoTestReport -PBUILD_ID=${env.BUILD_ID}"
                         // archiveUnitTestResults()
                     }
@@ -39,17 +53,16 @@ pipeline {
     
         stage ('Containerization') {
             steps {
-                echo 'Build docker image'
+                echo "Build docker image"
                 sh 'sleep 5s'
-                echo 'Push docker image'
+                echo "Push docker image"
                 sh 'sleep 5s'
             }
         }
 
         stage ('Deploy Azure Approval') {
             steps {
-                println 'New build image hello:${env.BUILD_ID} is ready.'
-                println 'Please complete the DAP, JAF and Scale tests.'
+                echo "New build image hello:${env.BUILD_ID} is ready. Please complete the DAP, JAF and Scale tests."
 
                 input 'Deploy to azure staging?'
             }

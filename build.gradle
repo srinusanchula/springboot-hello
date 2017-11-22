@@ -21,6 +21,9 @@ apply plugin: 'docker'
 def dockerDir = 'build/docker'
 jar.baseName = 'hello'
 jar.version = "$BUILD_ID"
+def repo_serv = project.hasProperty('ACR_LOGIN_SERV') ? project.property('ACR_LOGIN_SERV') : 'none'
+def repo_login = project.hasProperty('ACR_USERNAME') ? project.property('ACR_USERNAME') : 'none'
+def repo_password = project.hasProperty('ACR_PASSWORD') ? project.property('ACR_PASSWORD') : 'none'
 
 jar {
 	println "Jar name: $jar.archiveName"
@@ -84,18 +87,17 @@ task dockerbuildImage(type: Docker, dependsOn: dockerCopyJar) {
 	// exposePort(8080)
 }
 
-/*
 task dockerPushImage(type: Exec) {
 	def localImageTag = "$jar.baseName:$jar.version"
-	def remoteImageTag = "$ACR_LOGIN_SERV/$localImageTag"
+	def remoteImageTag = "${repo_serv}/$localImageTag"
 	logger.warn("Pushing new image: $remoteImageTag")
 
 	commandLine 'bash', '-e', '-c', """
 		docker tag $localImageTag $remoteImageTag
-        docker login $ACR_LOGIN_SERV --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker login $repo_serv --username $repo_login --password $repo_password
         docker push $remoteImageTag
         """
 	doLast {
 		logger.warn("Pushed new image: $remoteImageTag")
 	}
-}*/
+}
