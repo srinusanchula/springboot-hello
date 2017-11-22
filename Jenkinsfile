@@ -14,7 +14,7 @@ pipeline {
         stage ('Build') {
             steps {
                 echo 'Build source'
-                sh './gradlew clean build -x test -PBUILD_ID=${env.BUILD_ID}'
+                sh "./gradlew clean build -x test -PBUILD_ID=${env.BUILD_ID}"
             }
         }
 
@@ -30,7 +30,7 @@ pipeline {
                 stage ('Unit/Mock Test') {
                     steps {
                         echo 'Unit/Mock testing'
-                        sh './gradlew test jacocoTestReport -PBUILD_ID=${env.BUILD_ID}'
+                        sh "./gradlew test jacocoTestReport -PBUILD_ID=${env.BUILD_ID}"
                         // archiveUnitTestResults()
                     }
                 }
