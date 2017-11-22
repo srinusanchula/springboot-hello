@@ -37,30 +37,6 @@ pipeline {
             }
         }
     
-        /*stage ('Integration Test') {
-            parallel {
-                stage ('DAP') {
-                    steps {
-                        echo 'Here goes the DAP tests'
-                        sh 'sleep 10s'
-                    }
-                }
-                stage ('JAF') {
-                    steps {
-                        echo 'Here goes the JAF tests'
-                        sh 'sleep 10s'
-                    }
-                }
-            }
-        }
-    
-        stage ('Scale Test') {
-            steps {
-                echo 'Here goes the scale tests'
-                sh 'sleep 10s'
-            }
-        }*/
-
         stage ('Containerization') {
             steps {
                 echo 'Build docker image'
