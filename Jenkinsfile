@@ -46,10 +46,14 @@ pipeline {
             }
         }
 
-        println 'New build image hello:${env.BUILD_ID} is ready.'
-        println 'Please complete the DAP, JAF and Scale tests.'
+        stage ('Containerization') {
+            steps {
+                println 'New build image hello:${env.BUILD_ID} is ready.'
+                println 'Please complete the DAP, JAF and Scale tests.'
 
-        input 'Deploy to azure staging?'
+                input 'Deploy to azure staging?'
+            }
+        }
 
         stage ('Deploy Azure') {
             steps {
