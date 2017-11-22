@@ -7,6 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('se.transmode.gradle:gradle-docker:1.2')
 	}
 }
 
@@ -15,10 +16,19 @@ apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
+apply plugin: 'docker'
+
+def dockerDir = 'build/docker'
+jar.baseName = 'hello'
+jar.version = "$BUILD_ID"
 
 jar {
-	baseName = 'springboot-hello'
-	version =  '0.1.0'
+	println "Jar name: $jar.archiveName"
+
+	manifest {
+		attributes 'Implementation-Title': 'Hello Citrix',
+				'Implementation-Version': version
+	}
 }
 
 sourceCompatibility = 1.8
@@ -34,6 +44,7 @@ dependencies {
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
+//task functionalTest(type:Test, dependsOn: testClasses) {
 test {
 	testLogging {
 		showStackTraces = false
@@ -48,7 +59,7 @@ test {
 	}
 }
 
-jacocoTestReport {
+jacocoTestReport() {
 	group = "Reporting"
 	reports {
 		xml.enabled false
@@ -56,3 +67,35 @@ jacocoTestReport {
 		html.destination "${buildDir}/reports/coverage"
 	}
 }
+
+task dockerCopyJar(type: Copy) {
+	from jar
+	into dockerDir
+}
+
+task dockerbuildImage(type: Docker, dependsOn: dockerCopyJar) {
+	push = project.hasProperty('push')
+
+	baseImage = 'java:8'
+	applicationName = jar.baseName
+	tagVersion = jar.version
+	addFile ("${jar.archiveName}")
+	entryPoint(['java', '-Djava.security.egd=file:/dev/./urandom', '-jar', "/${jar.archiveName}"])
+	// exposePort(8080)
+}
+
+/*
+task dockerPushImage(type: Exec) {
+	def localImageTag = "$jar.baseName:$jar.version"
+	def remoteImageTag = "$ACR_LOGIN_SERV/$localImageTag"
+	logger.warn("Pushing new image: $remoteImageTag")
+
+	commandLine 'bash', '-e', '-c', """
+		docker tag $localImageTag $remoteImageTag
+        docker login $ACR_LOGIN_SERV --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker push $remoteImageTag
+        """
+	doLast {
+		logger.warn("Pushed new image: $remoteImageTag")
+	}
+}*/

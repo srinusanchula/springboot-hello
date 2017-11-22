@@ -5,7 +5,7 @@ pipeline {
 
         stage ('Checkout') {
             steps {
-                // echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
                 echo 'Checkout source'
                 checkout scm
             }
@@ -14,7 +14,7 @@ pipeline {
         stage ('Build') {
             steps {
                 echo 'Build source'
-                sh './gradlew clean build -x test'
+                sh './gradlew clean build -x test -PBUILD_ID=${env.BUILD_ID}'
             }
         }
 
@@ -30,14 +30,14 @@ pipeline {
                 stage ('Unit/Mock Test') {
                     steps {
                         echo 'Unit/Mock testing'
-                        sh './gradlew test jacocoTestReport'
+                        sh './gradlew test jacocoTestReport -PBUILD_ID=${env.BUILD_ID}'
                         // archiveUnitTestResults()
                     }
                 }
             }
         }
     
-        stage ('Integration Test') {
+        /*stage ('Integration Test') {
             parallel {
                 stage ('DAP') {
                     steps {
@@ -59,13 +59,21 @@ pipeline {
                 echo 'Here goes the scale tests'
                 sh 'sleep 10s'
             }
-        }
+        }*/
 
-        stage ('Deploy approval') {
+        stage ('Containerization') {
             steps {
-                input 'Deploy to azure staging?'
+                echo 'Build docker image'
+                sh 'sleep 5s'
+                echo 'Push docker image'
+                sh 'sleep 5s'
             }
         }
+
+        println 'New build image hello:${env.BUILD_ID} is ready.'
+        println 'Please complete the DAP, JAF and Scale tests.'
+
+        input 'Deploy to azure staging?'
 
         stage ('Deploy Azure') {
             steps {
