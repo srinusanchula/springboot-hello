@@ -1,3 +1,12 @@
+properties = null
+
+
+def loadProperties() {
+    node {
+        properties = readProperties file: '../uem-pipeline.properties'
+    }
+}
+
 pipeline {
     agent any
 
@@ -13,6 +22,8 @@ pipeline {
 
         stage ('Checkout') {
             steps {
+                echo "Load properties"
+                echo "Project ${properties.PROJECT}"
                 echo "Checkout source"
                 checkout scm
                 echo "Checkout successful for project ${p_proj}"
