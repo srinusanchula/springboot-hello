@@ -52,11 +52,11 @@ pipeline {
             steps {
                 echo "Clenup docker images"
                 // This no-run-if-empty works only for linux
-                sh "docker images -a | sed \"1 d\" | grep -v java | xargs --no-run-if-empty docker rmi -f"
+                sh "sudo docker images -a | sed \"1 d\" | grep -v java | xargs --no-run-if-empty docker rmi -f"
                 echo "Build docker image"
-                sh "./gradlew dockerBuildImage -PBUILD_ID=${env.BUILD_ID}"
+                sh "sudo ./gradlew dockerBuildImage -PBUILD_ID=${env.BUILD_ID}"
                 echo "Push docker image"
-                sh "./gradlew dockerPushImage -PBUILD_ID=${env.BUILD_ID} -PACR_LOGIN_SERV=${uem_props.ACR_LOGIN_SERV} -PACR_USERNAME=${uem_props.ACR_USERNAME} -PACR_PASSWORD=${uem_props.ACR_PASSWORD}"
+                sh "sudo ./gradlew dockerPushImage -PBUILD_ID=${env.BUILD_ID} -PACR_LOGIN_SERV=${uem_props.ACR_LOGIN_SERV} -PACR_USERNAME=${uem_props.ACR_USERNAME} -PACR_PASSWORD=${uem_props.ACR_PASSWORD}"
             }
         }
 
