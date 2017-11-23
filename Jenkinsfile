@@ -14,6 +14,7 @@ pipeline {
         stage ('Checkout') {
             steps {
                 echo "Load properties"
+                loadProperties()
                 echo "Properties loaded for ${properties.PROJECT}"
                 echo "Checkout source"
                 checkout scm
