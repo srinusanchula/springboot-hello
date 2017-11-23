@@ -1,10 +1,11 @@
+node {
     def props = readProperties file: '../uem-pipeline.properties'
     assert props['PROJECT'] == 'HelloCitrix'
     def p_proj= props['PROJECT']
     def p_repo_serv= props['ACR_LOGIN_SERV']
     def p_repo_login= props['ACR_USERNAME']
     def p_repo_pass= props['ACR_PASSWORD']
-
+}
 pipeline {
     agent any
 
