@@ -51,7 +51,8 @@ pipeline {
         stage ('Containerization') {
             steps {
                 echo "Clenup docker images"
-                sh "docker images -a | sed \"1 d\" | grep -v java | xargs docker rmi"
+                // This no-run-if-empty works only for linux
+                sh "docker images -a | sed \"1 d\" | grep -v java | xargs --no-run-if-empty docker rmi -f"
                 echo "Build docker image"
                 sh "./gradlew dockerBuildImage -PBUILD_ID=${env.BUILD_ID}"
                 echo "Push docker image"
