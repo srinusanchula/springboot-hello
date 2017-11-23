@@ -1,5 +1,5 @@
 node {
-    def props = readProperties file: '${workspace}/uem-pipeline.properties'
+    def props = readProperties file: '../uem-pipeline.properties'
 }
 
 pipeline {
