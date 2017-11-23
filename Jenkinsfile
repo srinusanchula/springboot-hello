@@ -3,7 +3,10 @@ pipeline {
 
     environment {
         props = readProperties file: '../uem-pipeline.properties'
-        test = 'clang'
+        p_proj= props['PROJECT']
+        p_repo_serv= props['ACR_LOGIN_SERV']
+        p_repo_login= props['ACR_USERNAME']
+        p_repo_pass= props['ACR_PASSWORD']
     }
 
     stages {
@@ -12,7 +15,7 @@ pipeline {
             steps {
                 echo "Checkout source"
                 checkout scm
-                echo "Checkout successful for project ${test}"
+                echo "Checkout successful for project ${p_proj}"
             }
         }
     
