@@ -1,6 +1,5 @@
 properties = null
 
-
 def loadProperties() {
     node {
         properties = readProperties file: '../uem-pipeline.properties'
@@ -10,23 +9,15 @@ def loadProperties() {
 pipeline {
     agent any
 
-    environment {
-        props = readProperties file: '../uem-pipeline.properties'
-        p_proj= props['PROJECT']
-        p_repo_serv= props['ACR_LOGIN_SERV']
-        p_repo_login= props['ACR_USERNAME']
-        p_repo_pass= props['ACR_PASSWORD']
-    }
-
     stages {
 
         stage ('Checkout') {
             steps {
                 echo "Load properties"
-                echo "Project ${properties.PROJECT}"
+                echo "Properties loaded for ${properties.PROJECT}"
                 echo "Checkout source"
                 checkout scm
-                echo "Checkout successful for project ${p_proj}"
+                echo "Checkout successful"
             }
         }
     
