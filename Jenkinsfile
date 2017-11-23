@@ -1,4 +1,6 @@
-def props = readProperties file: 'uem-pipeline.properties'
+node {
+    def props = readProperties file: 'uem-pipeline.properties'
+}
 
 pipeline {
     agent any
