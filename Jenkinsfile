@@ -51,7 +51,7 @@ pipeline {
         stage ('Containerization') {
             steps {
                 echo "Clenup docker images"
-                sh "docker rmi $(docker images -a | sed "1 d" | grep -v java)"
+                sh "docker images -a | sed "1 d" | grep -v java | xargs docker rmi"
                 echo "Build docker image"
                 sh "./gradlew dockerBuildImage -PBUILD_ID=${env.BUILD_ID}"
                 echo "Push docker image"
