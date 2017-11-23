@@ -2,7 +2,7 @@ properties = null
 
 def loadProperties() {
     node {
-        properties = readProperties file: '../uem-pipeline.properties'
+        uem_props = readProperties file: '../uem-pipeline.properties'
     }
 }
 
@@ -15,7 +15,7 @@ pipeline {
             steps {
                 echo "Load properties"
                 loadProperties()
-                echo "Properties loaded for ${properties.PROJECT}"
+                echo "Properties loaded for ${uem_props.PROJECT}"
                 echo "Checkout source"
                 checkout scm
                 echo "Checkout successful"
@@ -50,10 +50,12 @@ pipeline {
     
         stage ('Containerization') {
             steps {
+                echo "Clenup docker images"
+                sh "docker rmi $(docker images -a | sed "1 d" | grep -v java)"
                 echo "Build docker image"
-                sh 'sleep 5s'
+                sh "./gradlew dockerBuildImage -PBUILD_ID=${env.BUILD_ID}"
                 echo "Push docker image"
-                sh 'sleep 5s'
+                sh "./gradlew dockerPushImage -PBUILD_ID=${env.BUILD_ID} -PACR_LOGIN_SERV=${uem_props.ACR_LOGIN_SERV} -PACR_USERNAME=${uem_props.ACR_USERNAME} -PACR_PASSWORD=${uem_props.ACR_PASSWORD}"
             }
         }
 
