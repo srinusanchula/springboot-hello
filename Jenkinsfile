@@ -1,5 +1,9 @@
 node {
     def props = readProperties file: '../uem-pipeline.properties'
+    def p_proj= props['PROJECT']
+    def p_repo_serv= props['ACR_LOGIN_SERV']
+    def p_repo_login= props['ACR_USERNAME']
+    def p_repo_pass= props['ACR_PASSWORD']
 }
 
 pipeline {
@@ -11,7 +15,7 @@ pipeline {
             steps {
                 echo "Checkout source"
                 checkout scm
-                echo "Checkout successful for project ${props.PROJECT}"
+                echo "Checkout successful for project ${p_proj}"
             }
         }
     
