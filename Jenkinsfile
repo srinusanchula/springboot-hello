@@ -80,8 +80,9 @@ pipeline {
 def proceedDeployAzure() {
   try {
     timeout(time: 2, unit: 'HOURS') {
-        def proceed = input message: 'Proceed deploy to azure staging?',
-                    parameters: [booleanParam(defaultValue: false, description: "New build image hello:${env.BUILD_ID} is ready. Please complete the DAP, JAF and Scale tests.", name: 'proceedDeployAzure')]
+        def proceed = input(message: 'Proceed Deploy to Azure Staging?', ok: 'Yes',
+                            parameters: [booleanParam(defaultValue: false,
+                            description: "New build image hello:${env.BUILD_ID} is ready.\nPlease complete the DAP, JAF and Scale tests.", name: 'Yes?')])
         return proceed
     }
   } catch(e) {
