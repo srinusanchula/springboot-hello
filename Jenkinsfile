@@ -63,8 +63,8 @@ pipeline {
 
         stage ('Deploy to Azure') {
             steps {
-                def answer = proceedDeployAzure()
                 script {
+                    def answer = proceedDeployAzure()
                     if(answer) {
                         echo 'Here goes the azure staging deployment'
                         sh 'sleep 10s'
