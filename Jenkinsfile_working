@@ -53,7 +53,7 @@ pipeline {
                 echo "Clenup docker images"
                 // This no-run-if-empty works only for linux
                 // sh "sudo docker images -a | sed \"1 d\" | grep -v java | xargs --no-run-if-empty docker rmi -f"
-                "sudo docker images -a | sed \"1 d\" | grep -v java | awk \'{print \$3}\' | xargs --no-run-if-empty docker rmi -f"
+                sh "sudo docker images -a | sed \"1 d\" | grep -v java | awk \'{print \$3}\' | xargs --no-run-if-empty docker rmi -f"
                 echo "Build docker image"
                 sh "sudo ./gradlew dockerBuildImage -PBUILD_ID=${env.BUILD_ID}"
                 echo "Push docker image"
