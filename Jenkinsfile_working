@@ -21,7 +21,7 @@ pipeline {
                 echo "Checkout successful"
             }
         }
-    
+
         stage ('Build') {
             steps {
                 echo "Building source, Running build ${env.BUILD_ID}."
@@ -47,7 +47,7 @@ pipeline {
                 }
             }
         }
-    
+
         stage ('Containerization') {
             steps {
                 echo "Clenup docker images"
@@ -61,30 +61,21 @@ pipeline {
             }
         }
 
-        stage ('Deploy to Azure') {
+        stage ('Deploy Azure Approval') {
             steps {
-                def answer = proceedDeployAzure()
-                if(isFoo) {
-                    echo 'Here goes the azure staging deployment'
-                    sh 'sleep 10s'
-                } else {
-                    echo "Proceed deploy to azure skipped. Done"
-                }
+                echo "New build image hello:${env.BUILD_ID} is ready. Please complete the DAP, JAF and Scale tests."
+
+                input 'Deploy to azure staging?'
+            }
+        }
+
+        stage ('Deploy Azure') {
+            steps {
+                echo 'Here goes the azure staging deployment'
+                sh 'sleep 10s'
             }
         }
     }
-}
-
-def proceedDeployAzure() {
-  try {
-    timeout(time: 2, unit: 'HOURS') {
-        def proceed = input message: 'Proceed deploy to azure staging?',
-                    parameters: [booleanParam(defaultValue: false, description: "New build image hello:${env.BUILD_ID} is ready. Please complete the DAP, JAF and Scale tests.", name: 'proceedDeployAzure')]
-        return proceed
-    }
-  } catch(e) {
-    return false
-  }
 }
 
 def archiveUnitTestResults() {
