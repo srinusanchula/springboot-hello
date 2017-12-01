@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HelloController {
 
     @RequestMapping("/hello")
-    public String index() {
-        return "Hello Citrix!";
+    public String hello() {
+        return "Hello UEM Microservice!";
     }
 
 }

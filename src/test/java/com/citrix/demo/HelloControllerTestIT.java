@@ -36,6 +36,6 @@ public class HelloControllerTestIT {
     public void getHello() throws Exception {
         ResponseEntity<String> response = template.getForEntity(base.toString() + "hello",
                 String.class);
-        assertThat(response.getBody(), equalTo("Hello Citrix!"));
+        assertThat(response.getBody(), equalTo("Hello UEM Microservice!"));
     }
 }
