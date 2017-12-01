@@ -65,15 +65,6 @@ pipeline {
             steps {
                 input id: 'deploy', message: "New build image hello:${env.BUILD_ID} is ready.
                 Please complete the DAP, JAF and Scale tests.", ok: 'Deploy!'
-                /*script {
-                    def answer = proceedDeployAzure()
-                    if(answer) {
-                        echo 'Here goes the azure staging deployment'
-                        sh 'sleep 10s'
-                    } else {
-                        echo "Proceed deploy to azure skipped. Done"
-                    }
-                }*/
             }
         }
     }
