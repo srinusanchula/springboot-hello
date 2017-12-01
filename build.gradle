@@ -92,8 +92,6 @@ task dockerPushImage(type: Exec) {
         echo $repo_password | docker login $repo_serv --username $repo_login --password-stdin
         docker push $remoteImageTag
 		docker logout $repo_serv
+		echo 'Push new image complete.'
         """
-	doLast {
-		logger.warn("Pushed new image: $remoteImageTag")
-	}
 }
