@@ -63,7 +63,7 @@ pipeline {
 
         stage ('Deploy to Azure') {
             steps {
-                input id: 'deploy', message: "New build image hello:${env.BUILD_ID} is ready. Please complete the DAP, JAF and Scale tests.", ok: 'Deploy!'
+                input id: 'deploy', message: "New build image ${uem_props.ACR_LOGIN_SERV}/hello:${env.BUILD_ID} is ready. Please complete the DAP, JAF and Scale tests.", ok: 'Deploy!'
                 echo 'Here goes the azure staging deployment'
                 sh 'sleep 10s'
             }
