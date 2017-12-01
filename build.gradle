@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.5.8.RELEASE'
+		springBootVersion = '1.5.9.RELEASE'
 	}
 	repositories {
 		jcenter()
@@ -27,11 +27,6 @@ def repo_password = project.hasProperty('ACR_PASSWORD') ? project.property('ACR_
 
 jar {
 	println "Jar name: $jar.archiveName"
-
-	manifest {
-		attributes 'Implementation-Title': 'Hello Citrix',
-				'Implementation-Version': version
-	}
 }
 
 sourceCompatibility = 1.8
@@ -72,7 +67,7 @@ jacocoTestReport() {
 }
 
 task dockerCopyJar(type: Copy) {
-	from jar
+	from "build/libs/${jar.archiveName}"
 	into dockerDir
 }
 
